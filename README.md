@@ -719,3 +719,377 @@ for index1 in 0 to 6:
 }
 ```
     
+	
+# Appendix A - Reference Manual 
+
+## A.1 Introduction
+This manual describes the canvas language features. This manual is basically a reliable guide to the readers.
+
+## A.2 Lexical Conventions
+### A.2.1 Tokens
+There are six classes of tokens which are classified as: identifiers, keywords, constants, string literals, operators, and other separators. white space is required to separate otherwise adjacent identifiers, keywords, and constants. Blanks, newlines, horizontal and vertical tabs, formfeeds and comments are ignored except as they separate tokens.
+
+### A.2.2 Comments
+The characters /* introduce a comment, which terminates with the characters */. If you want to write a comment of one or more than one line then we are using /*...*/, otherwise in general for single line comments we are going to use ‘//’ characters. Comments do not nest. Also they do not
+occur within a string or character literals.
+
+### A.2.3 Identifiers
+An identifier can be a sequence of digits and letters. The first character must be a letter, after that it’s up to you to use numbers or not, while defining your identifiers. The underscore ‘ _’ counts as a letter. Upper and lower case letters are different. Internal identifiers include preprocessor macro
+names and all other names that do not have external linkage. Identifiers with external linkage are more restricted.
+
+### A.2.4 Keywords
+The following identifiers are reserved for the use as keywords, and may not be used otherwise:
+* if
+* else
+* loop
+* in
+* for
+* select
+* let
+### A.2.5 Constants
+There are several kinds of constants. Each has a data type; Par.A.4.2 discusses the basic types:
+constant:
+integer-constant
+character-constant
+floating-constant
+
+#### A.2.5.1 Integer Constants:
+ An integer constant consisting of a sequence of digits is taken to be octal if it begins with 0 (digit zero), or otherwise decimal. Octal constants are from 0 to 7. A sequence of digits preceded by 0x or 0X (digit zero) is taken to be a hexadecimal integer. The hexadecimal digits include a/A to f/F with values 10 to 15 respectively.
+
+### A.2.6 String Literals
+
+String Literal / String constant, is a sequence of characters surrounded by double quotes. A string is of type “array of characters” and storage class static, and is initialized with the given characters.
+
+### A.3 Data types
+## A.3.1 Basic Types
+
+The basic data types that we have are: 
+Scalar Types:
+```
+(Signed: i8, i16,  i32, i64, i128) 
+(Unsigned: u8, u16, u32, u64, u128)
+(Floating: f8, f16, f32, f64, f128)
+(Character: One byte Character : ‘a’ , ‘A’ , ‘%’)
+(String:'Canvas')
+(Bool: true , false)
+(Pointers: *f32, *u64)  
+```
+### A.3.2 Derived types
+The derived data types are:
+* Compound Types: Arrays and Tuples
+	* Array: [5;i32]=[1,2,3,4,5]
+	* Tuples:(‘a’,32,true)
+ * Custom Types: 
+	* Objects
+	* Enums
+	* Constants
+* Library Types:
+	* Vectors
+	* Stack
+	* Heaps
+	* Dictionary
+
+## A.4.1 Multiplicative Operators
+The multiplicative operators *, /, and % group left-to-right.
+multiplicative-expression:
+* multiplicative-expression * cast-expression
+* multiplicative-expression / cast-expression
+* multiplicative-expression % cast-expression
+The operands of * and / must have arithmetic type; the operands of % must have integral type.
+The usual arithmetic conversions are performed on the operands, and predict the type of the
+result.
+The binary * operator denotes multiplication.The binary / operator yields the quotient, and the % operator the remainder, of the division of
+the first operand by the second; if the second operand is 0, the result is undefined.
+
+## A.4.2 Additive Operators
+The additive operators + and - group left-to-right. If the operands have arithmetic type, the
+usual arithmetic conversions are performed. There are some additional type possibilities for
+each operator.
+additive-expression:
+multiplicative-expression
+additive-expression + multiplicative-expression
+additive-expression - multiplicative-expression
+The result of the + operator is the sum of the operands. A pointer to an object in an array and a
+value of any integral type may be added. The latter is converted to an address offset by
+multiplying it by the size of the object to which the pointer points. The sum is a pointer of the
+same type as the original pointer, and points to another object in the same array, appropriately
+offset from the original object. Thus if P is a pointer to an object in an array, the expression
+P+1 is a pointer to the next object in the array. If the sum pointer points outside the bounds of
+the array, except at the first location beyond the high end, the result is undefined.
+The result of the - operator is the difference of the operands. A value of any integral type may
+be subtracted from a pointer, and then the same conversions and conditions as for addition
+apply.
+
+## A.4.3 Relational Operators:
+The relational operators group left-to-right, but this fact is not useful; a<b<c is parsed as
+(a<b)<c, and evaluates to either 0 or 1.
+relational-expression:
+shift-expression
+* relational-expression < shift-expression
+* relational-expression > shift-expression
+* relational-expression <= shift-expression
+* relational-expression >= shift-expression
+The operators < (less), > (greater), <= (less or equal) and >= (greater or equal) all yield 0 if the
+the specified relation is false and 1 if it is true.
+## A.4.4 Equality Operators
+equality-expression:
+relational-expression
+equality-expression == relational-expression
+equality-expression != relational-expression
+The == (equal to) and the != (not equal to) operators are analogous to the relational operators
+except for their lower precedence. (Thus a<b == c<d is 1 whenever a<b and c<d have the
+same truth-value.)
+## A.4.5 Logical AND Operator
+logical-AND-expression:
+inclusive-OR-expression
+logical-AND-expression && inclusive-OR-expression
+The && operator groups left-to-right. It returns 1 if both its operands compare unequal to zero,
+0 otherwise. Unlike &, && guarantees left-to-right evaluation: the first operand is evaluated,
+including all side effects; if it is equal to 0, the value of the expression is 0. Otherwise, the
+the right operand is evaluated, and if it is equal to 0, the expression's value is 0, otherwise 1.
+
+## A.4.6 Logical OR Operator
+logical-OR-expression:
+logical-AND-expression
+logical-OR-expression || logical-AND-expression
+The || operator groups left-to-right. It returns 1 if either of its operands compare unequal to
+zero, and 0 otherwise. Unlike |, || guarantees left-to-right evaluation: the first operand is
+evaluated, including all side effects; if it is unequal to 0, the value of the expression is 1.
+Otherwise, the right operand is evaluated, and if it is unequal to 0, the expression's value is 1,
+otherwise 0.
+## A.4.7 Conditional Operator
+conditional-expression:
+logical-OR-expression
+logical-OR-expression ? expression : conditional-expression
+The first expression is evaluated, including all side effects; if it compares unequal to 0, the
+the result is the value of the second expression, otherwise that of the third expression. Only one of
+the second and third operands are evaluated. If the second and third operands are arithmetic,
+the usual arithmetic conversions are performed to bring them to a common type, and that type
+is the type of the result.
+
+## A.4.8 Assignment Expressions
+There are several assignment operators; all groups right-to-left.
+assignment-expression:
+conditional-expression
+unary-expression assignment-operator assignment-expression
+assignment-operator: one of
+= *= /= %= += -= <<= >>= &= ^= |=
+All require an lvalue as left operand, and the lvalue must be modifiable: it must not be an
+array, and must not have an incomplete type, or be a function.
+
+## A.4.9 Comma Operator
+expression:
+assignment-expression
+expression , assignment-expression
+
+A pair of expressions separated by a comma is evaluated left-to-right, and the value of the left
+expression is discarded. The type and value of the result are the type and value of the right
+operand. All side effects from the evaluation of the left-operand are completed before
+beginning the evaluation of the right operand.
+
+	
+	
+	
+# Reference Manual  
+### Keywords:-
+* break
+* const
+* continue
+* do
+* else
+* enum
+* false
+* fn
+* for
+* if
+* import
+* in
+* let
+* loop
+* obj
+* pub
+* priv
+* return
+* self
+* to
+* true
+* while
+ 
+### Comments:-
+* LINE COMMENT : ```//```
+* MULTI LINE COMMENT : ```/*…….*/```
+ 
+### WhiteSpace:-
+* horizontal tab, ```'\t'```
+* new line, ```'\n'```
+* space, ```' '```
+ 
+### Characters And Strings:-
+* ASCII_ESCAPE : ```\x``` OCT_DIGIT HEX_DIGIT
+* ```\```n new line
+* ```\t``` tab
+* ```\\ ```backslash
+* ```\0``` Null Character or Terminating Character
+* *QUOTE_ESCAPE* : ``` \' ```Single Quotes
+*	```\"``` Double Quotes
+### Numbers:
+* Decimal integer ```-45```
+* Hex integer ```0xff```
+* Octal integer ```0o27```
+* Binary integer ```0b1101```
+* Floating-point ```1.52E-23```
+### BOOLEAN:
+* ```true```
+* ```false ```
+ 
+ 
+### Symbols:
+* ``` + ```Plus
+*  ```- ``` Minus
+* ```*``` Star
+* ```/ ```Slash
+* ```%``` Percent
+* ```^``` Caret
+* ```!``` Not
+* ```&``` And
+* ```|``` Or
+* ```&&``` AndAnd
+* ```||``` Or Or
+* ```<<``` SHL
+* ```>>``` SHR
+* ```+=``` PlusEq
+* ```-=``` MinusEq
+* ```*=``` StarEq
+* ```/=``` SlashEq
+* ```%=``` PercentEq
+* ```^=``` CaretEq
+* ```&=``` AndEq
+* ```|=``` OrEq
+* ```<<=``` ShlEq
+* ```>>=``` ShrEq
+* ```=``` Eq 
+* ```==``` Assignment
+* ```!=``` Ne
+* ```>``` Gt
+* ```<``` Lt
+* ```>=```Ge
+* ```<=``` Le
+* ```_``` Underscore
+* ```.``` Dot
+* ```.. ```DotDot
+* ```..= ```DotDotEq
+* ```,``` Comma
+* ```;``` Semi
+* ```:``` Colon
+* ```->``` RArrow
+* ```=>``` EqGtArrow
+* ```# ```Pound
+### Bracket punctuations:
+* ```( )``` Parentheses
+*  ```{ }``` Curly braces
+* ```[ ]``` Square brackets
+### Scoping:
+*  ```::``` 
+### Block Expression:
+Block Expression or block is a control flow expression. A block sequentially executes its component statements. All the data items declared inside the block are not visible outside the block.
+Block Format:
+```
+{
+	//Block Body
+	Statements or Variable Declarations
+}
+ ```
+Since Block is an expression we can use it to assign data to variables.
+Ex:
+```
+let var={
+           	5-61+5*2
+};
+```
+### Parallel Blocks Or Future Blocks:
+These blocks are used in achieving parallel programming. These blocks returns an enum .
+If block has finished it’s task it returns the value of the overall expression. If not the value returned is void,null or undefined. To check processing of the block use the keyword cpara. All this is included in standard library for parallel processing.
+      ```     	para
+           	{
+Expressions
+}```
+#### Functions:
+It consists of a block , along with a name and a set of parameters. Functions are declared with the keyword fn. Functions may or may not return the value of the block.
+There is also para fn which is used for achieving parallelism
+
+### Objects:
+It is an abstract data type which is combination of variables, functions or methods, and data structures. All these are called as fields of objects.
+There are 2 types of objects:
+Objects with visible fields.
+```obj coordinate{x: i32, y: i32};
+let cor = coordinate{x: 1,y: 2};
+let xcor: i32 = cor.x;
+```
+
+Objects with anonymous fields. The tuple object.
+
+```
+obj coordinate(i32, i32);
+let cor = coordinate(1, 2);
+let xcor: i32 = select cor { coordinate(x, _) => x };
+```
+## Methods can be implemented on objects
+
+### Enumerations:
+Enumerations are declared with the keyword enum.
+	Same usage as in the C language.
+Enumeration variants can be constructed similarly to objects with scope operator.
+Ex:- 
+```enum movement{up, down, left, right, xy{x:i32 , y:i32} }
+let moveUp = movement::up;
+let moveXY = movement::xy{x:23 , y:24};
+```
+### Call expression:
+It consists of an expression followed by a parenthesized expression-list.It is used to invoke function with 0 or more input variables
+Method call expression:
+It consists of an expression followed by a single dot. Method call is used in combination with objects.
+```
+Ex:-
+obj qwer{
+	a:i32;		//first variable
+b:i32;		//second variable
+fn add(&self)->i32 {a+b}
+	 let cal: qwer{a:32,b:56};
+	cal.add();
+```
+### Pointers And Memory Management:-
+Pointers are nothing but a reference to a memory address on the Heap.
+In Canvas we can reference and dereference using & and * operators
+```
+let ptr = alloc(size,type);//ptr of type with size
+dealloc(ptr)//deallocation of the heap memory used by pointer
+realloc(ptr,size(ptr),4*size(ptr));//reallocation of memory used by ptr
+```
+
+
+	
+# Conclusion 
+* We learned team-work, how to work with our friends through an online platform, delineation of tasks and how to better use the cloud for getting work done.
+* We learned about the pros of improved time management and the cons of procrastination
+* Learned how to use github 
+* We learned how to use markdown language and how to effectively present data in it
+* We studied manuals of different languages, understood basic concepts involved in all programming languages and their similarities and differences, strengths and weaknesses.
+* Improved our concepts about functional and object oriented paradigm and the reasons for their preferences.
+* Learnt about how and when to use which particular language for a specific tasks and the different ways the language would strain the hardware resources
+* We brushed up our basic understanding of c programming language
+* Got a glimpse at the various thought processes that go into creation of large projects in general and the creation of a new language in particular.
+* The reasons behind the creation of new languages, why they managed to take the market by storm and how they impacted future language development.
+* We also got sneak-peek into the vast amount of techniques and resources that are used for the creation of 2D games, the reasons for the existence of game engines and the hardships one encounters when trying to create a language especially dedicated towards gaming. 
+* We also understood why there are so many bugs even after years of development in big games
+* We appreciate good languages and software more now that we know the effort it takes just to design them
+
+	
+
+## Shortcomings :
+* Though we had tried to make this language easy to understand, a requirement of the basic understanding of oop concepts with amplified image import and other game development features makes it a little harder for the basic user to link with it in comparision to languages like python but still easier to approach than C.
+* As the program allows for more efficient and creative use of memory, to access its full capabilities a good understanding of memory is needed.
+* Since this language is close to the processor and the programmer has been given access to many different attributes, even simple codes may be difficult to code. 
+* As this language has low level abstraction, it is not very secure. If someone opens the code then he can easily manipulate the values and being closer to the hardware it can directly affect it.
+* The language does not allow for global variables, the only global trait that can be declared are the attributes of ‘canvas’. 
+* The language has a very strict syntax despite our best efforts to try and make it as readable as python.
+* A compiler has yet not been designed, but we feel like the language can be slow if the programmer tries to load too many images.
