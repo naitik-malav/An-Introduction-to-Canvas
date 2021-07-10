@@ -1,8 +1,5 @@
-# An-Introduction-to-Canvas
-Project done in course Principles of Programming Languages under Prof. Ramakrishna Upadrasta
-
 # An Introduction to Canvas
-
+Project done in course Principles of Programming Languages under Prof. Ramakrishna Upadrasta
 >This is an imperative language, allowing the programmer to change the state of the program based on instructions, with focus on Object Oriented Programming. This language is >being developed for general purpose use with an added focus on 2D game development. The use of various resources like a basic output stream focused on the 'canvas' as well as >input features for images and key bindings allow it to perform basic I/O operations directly onto the canvas, a resizable output screen based on the features opted by the user. >A simple syntax without trade-off for performance being a key feature of the language enables new users to get used to this language readily. The closeness of it to the machine >hardware allows it a lot of flexibility like bitwise calculations allowing it to be used for building intensive systems like Operating Systems and device drivers. Being >platform independent it is easily executable on vastly different hardware without any modification to the code, a write-once-run-anywhere feature.
 
 Let’s begin with a simple “Hello World!”
